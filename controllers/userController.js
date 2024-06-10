@@ -1,3 +1,4 @@
+const asyncHandler = require ('express-async-handler')
 const bcrypt = require('bcryptjs')
 
 const User = require('../models/userModel')
@@ -10,16 +11,16 @@ const registerUser = async (req, res) => {
 
     //Validation
     if(!name || !email || !password){
-        return res.status(400)
-        throw new Error('Please include all fields')
+        res.status(400).json({ error: 'Please include all fields' })
+        return
     }
 
     // Find if user already exists
     const userExists = await User.findOne({email})
 
     if (userExists) {
-        res.status(400)
-        throw new Error ('User already exists')
+        res.status(400).json({ error: 'User already exists' })
+        return
     }
 
     // Hash password
@@ -40,8 +41,7 @@ const registerUser = async (req, res) => {
             email: user.email
         })
     } else {
-        res.status(400)
-        throw new error('Invalid user data')
+        res.status(400).json({ error: 'Invalid user data' })
     }
 }
 
