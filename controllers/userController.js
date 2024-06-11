@@ -9,7 +9,7 @@ const User = require('../models/userModel')
 const registerUser = async (req, res) => {
     const {name, email, password} = req.body
 
-    //Validation
+    // Validation
     if(!name || !email || !password){
         res.status(400).json({ error: 'Please include all fields' })
         return
@@ -64,17 +64,34 @@ const loginUser = async (req, res) => {
     })
 } else {
     res.status(401).json({ error: 'Invalid credentials' })
-}
+}}
+
+// @desc   Get current user
+// @route  /api/users/me
+// @access Private
+const getMe = async(req, res) => {
+    const token = req.headers.authorization.split(' ')[1] // Get token from header
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) // Verify token
+    req.user= await User.findById(decoded.id) // Get user from token
+    
+    const user = {
+        id: req.user._id,
+        email: req.user.email,
+        name: req.user.name,
+    }
+    
+    res.status(200).json(user)
 }
 
 // Generate token
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: '1d',
+        expiresIn: '30d',
     })
 }
 
 module.exports = {
     registerUser,
     loginUser,
+    getMe,
 }
