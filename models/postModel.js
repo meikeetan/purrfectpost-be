@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const postSchema = mongoose.Schema({
     createdBy: {
         type: String,
-        required: [true]
+        required: true
     },
     caption: {
         type: String,
@@ -11,6 +11,10 @@ const postSchema = mongoose.Schema({
     likes: {
         type: [String],  
     },
+    img: {
+        type: String,
+        required: true
+    }
 
 }, {
     timestamps: true,
