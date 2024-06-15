@@ -5,6 +5,7 @@ const {errorHandler} = require('./middleware/errorMiddleware')
 const connectDB = require('./config/db')
 const PORT = process.env.PORT || 8000
 const cors = require('cors');
+const uploadRoute = require('./controllers/uploadController')
 
 // Connect to database
 connectDB()
@@ -12,26 +13,17 @@ connectDB()
 const app = express()
 app.use(cors({
     //change this origin shit every time i change my FE link
-    origin: ['http://localhost:3002'],
+    origin: ['http://localhost:3000'],
     credentials: true
   }));
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
 
-  
-  app.get('/', (req, res) => {
-    res.send('Hello');
-  });
-
 // Routes
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/post', require('./routes/postRoutes'));
-
-app.post('/api/users/signup', (req, res) => {
-    // Handle signup logic here
-    res.json({ token: 'ome-token' });
-  });
+app.use('/api/upload', uploadRoute)
 
 // Error handler middleware
 app.use(errorHandler);
