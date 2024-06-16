@@ -66,11 +66,38 @@ async function getUserPosts(req, res) {
     }
   }
 
+  // Update Likes
+  async function updateLikes(req, res) {
+    const postId = req.params.id; // assuming you're passing the post ID as a parameter
+    const userId = req.body.id; // assuming you're using authentication and have access to the user's ID
+  
+    const postToUpdate = await Post.find({_id: postId});
+    if (!postToUpdate) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+  
+    const likes = postToUpdate.likes;
+    const userAlreadyLiked = likes.includes(userId);
+  
+    if (userAlreadyLiked) {
+      // remove user from likes array
+      postToUpdate.likes = likes.filter((id) => id!== userId);
+    } else {
+      // add user to likes array
+      postToUpdate.likes.push(userId);
+    }
+  
+    await postToUpdate.save();
+  
+    res.json({ message: 'Likes updated successfully' });
+  }
+
 module.exports = {
     createNewPost,
     getUserPosts,
     getAllPosts,
     deletePost,
     updatePost,
+    updateLikes,
 }
 
