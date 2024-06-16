@@ -2,14 +2,15 @@ const Post = require('../models/postModel')
 
 // Create New Post
 async function createNewPost (req, res) {
-    const {createdBy, caption, imgUrl} = req.body
+    const {createdBy, caption, images} = req.body
     const post = await Post.create({
         createdBy,
         caption,
-        imgUrl
+        images
     })
     return res.status(201).json(post)
 }
+
 
 // Get all posts created by that particular id 
 async function getUserPosts(req, res) {
