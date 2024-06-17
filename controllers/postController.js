@@ -14,8 +14,9 @@ async function createNewPost (req, res) {
 
 // Get all posts created by that particular id 
 async function getUserPosts(req, res) {
+    const id = req.params.id
     try {
-      const postings = await Post.find({createdBy: req.params.id});
+      const postings = await Post.find({ createdBy: id});
       return res.status(200).json(postings);
     } catch (error) {
       console.error(error);
@@ -71,11 +72,12 @@ async function getUserPosts(req, res) {
     const postId = req.params.id; // assuming you're passing the post ID as a parameter
     const userId = req.body.id; // assuming you're using authentication and have access to the user's ID
   
-    const postToUpdate = await Post.find({_id: postId});
+    const postToUpdate = await Post.findOne({_id: postId});
+    console.log(postToUpdate)
     if (!postToUpdate) {
       return res.status(404).json({ error: 'Post not found' });
     }
-  
+    
     const likes = postToUpdate.likes;
     const userAlreadyLiked = likes.includes(userId);
   

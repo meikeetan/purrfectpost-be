@@ -70,14 +70,17 @@ const loginUser = async (req, res) => {
 // @route  /api/users/me
 // @access Private
 const getMe = async(req, res) => {
-    const token = req.headers.authorization.split(' ')[1] // Get token from header
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) // Verify token
-    req.user= await User.findById(decoded.id) // Get user from token
-    
+    //  const token = req.headers.authorization.split(' ')[1] // Get token from header
+    //  const decoded = jwt.verify(token, process.env.JWT_SECRET) // Verify token
+    //  req.user= await User.findById(decoded.id) // Get user from token
+    const id = req.params.id
+    const foundUser = await User.findOne({_id: id})
     const user = {
-        id: req.user._id,
-        email: req.user.email,
-        name: req.user.name,
+        id: foundUser._id,
+        email: foundUser.email,
+        name: foundUser.name,
+        bio: foundUser.bio,
+        profilePic: foundUser.profilePic
     }
     
     res.status(200).json(user)
@@ -90,10 +93,42 @@ const generateToken = (id) => {
     })
 }
 
+// @desc   Update a user
+// @route  /api/users/:id
+// @access Private
+const updateUser = async (req, res) => {
+    const { name, bio, profilePic } = req.body;
+    // const { id } = req.params;
+    const userId = req.params.id; // I ADDED THIS
+  
+    // Find user by id
+    const user = await User.findOne({_id: userId});
+  
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+  
+    // Update user
+    if (name) user.name = name;
+    if (bio) user.bio = bio;
+    if (profilePic) user.profilePic = profilePic;
+  
+    await user.save();
+  
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      bio: user.bio,
+      profilePic: user.profilePic
+    });
+  }
+
 
 
 module.exports = {
     registerUser,
     loginUser,
     getMe,
+    updateUser,
 }
