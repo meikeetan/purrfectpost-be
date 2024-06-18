@@ -7,7 +7,6 @@ router.get('/me/:id', getUserPosts)
 router.get('/', getAllPosts)
 router.delete('/delete/:id', deletePost)
 router.put('/update/:id', updatePost)
-
 router.put('/updatelike/:id', updateLikes)
 
 

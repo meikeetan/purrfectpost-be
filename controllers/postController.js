@@ -38,7 +38,7 @@ async function getUserPosts(req, res) {
   // Delete Post
   async function deletePost(req, res) {
     try {
-      const { id } = req.params;
+      const {id} = req.params;
     const deletedPost = await Post.findByIdAndDelete(id);
     if (!deletedPost) {
       return res.status(404).json({ error: 'Post not found' });
