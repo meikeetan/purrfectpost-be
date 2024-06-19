@@ -13,7 +13,7 @@ connectDB()
 const app = express()
 app.use(cors({
     //change this origin shit every time i change my FE link
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:3000', 'https://purrfectpost-fe.vercel.app'],
     credentials: true
   }));
 app.use(express.json())
